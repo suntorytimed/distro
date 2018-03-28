@@ -153,19 +153,15 @@ elif [[ "$(uname)" == 'Linux' ]]; then
         distribution="raspbian"
         debian_major_version="$VERSION"
     elif [[ "$DISTRO" == "opensuse" ]]; then
-	    distribution="opensuse"
-	    opensuse_major_version="$VERSION"
+	distribution="opensuse"
+	opensuse_major_version="$VERSION"
     # Detect Debian
     elif [[ "$DISTRO" = "debian" ]]; then
-	    distribution="debian"
-	    debian_major_version="$VERSION"
+	distribution="debian"
+	debian_major_version="$VERSION"
     elif [[ "$DISTRO" = "neon" ]]; then
-	    distribution="ubuntu"
-	    ubuntu_major_version="${VERSION%%.*}"
-    # Detect Alpine
-    elif [[ "$DISTRO" = "alpine" ]]; then
-        distribution="alpine"
-        alpine_major_version="$VERSION"
+	distribution="ubuntu"
+	ubuntu_major_version="${VERSION%%.*}"
     else
         echo '==> Only Ubuntu, elementary OS, Fedora, Archlinux, OpenSUSE, Debian, CentOS and KDE neon distributions are supported.'
         exit 1
@@ -362,41 +358,38 @@ elif [[ "$(uname)" == 'Linux' ]]; then
 
         install_openblas || true
     elif [[ $distribution == 'debian' ]]; then
-	    if [[ $debian_major_version == '8' ]] || [[ $debian_major_version == '9' ]]; then
-	        echo "==> Found Debian version ${debian_major_version}"
-	        if sudo apt-get update ; then
-	            echo "Updated successfully."
-	        else
-	            echo "Some portion of the update is failed"
-	        fi
-	        #Basic package required for Torch
-	        sudo apt-get install -y build-essential curl \
-		        cmake libreadline-dev git-core libqt4-dev libjpeg-dev \
-		        libpng-dev ncurses-dev imagemagick libzmq3-dev gfortran \
-		        unzip gnuplot gnuplot-x11 ipython
-
-	        #require for common torch plug-ins
-	        sudo apt-get install -y libgraphicsmagick1-dev libfftw3-dev sox libsox-dev
-
-	        install_openblas || true
+	if [[ $debian_major_version == '8' ]] || [[ $debian_major_version == '9' ]]; then
+	    echo "==> Found Debian version ${debian_major_version}"
+	    if sudo apt-get update ; then
+	       echo "Updated successfully."
 	    else
-	        echo "Only Jessie Debian 8 and 9 is supported for now, aborting."
-	        exit 1
+	       echo "Some portion of the update is failed"
 	    fi
+	    #Basic package required for Torch
+	    sudo apt-get install -y build-essential curl \
+		 cmake libreadline-dev git-core libqt4-dev libjpeg-dev \
+		 libpng-dev ncurses-dev imagemagick libzmq3-dev gfortran \
+		 unzip gnuplot gnuplot-x11 ipython
+
+	    #require for common torch plug-ins
+	    sudo apt-get install -y libgraphicsmagick1-dev libfftw3-dev sox libsox-dev
+
+	    install_openblas || true
+	else
+	    echo "Only Jessie Debian 8 and 9 is supported for now, aborting."
+	    exit 1
+	fi
     fi
-    elif [[ "$(uname)" == 'FreeBSD' ]]; then
-        pkg install ImageMagick cmake curl fftw3 git gnuplot libjpeg-turbo \
-            libzmq3 ncurses openblas openssl png py27-ipython \
-            py27-pip qt4-corelib qt4-gui readline unzip
-    elif [[ $distribution == 'alpine' ]]; then
-        apk add cmake imagemagick ncurses-dev ipython gnuplot-x11 gnuplot unzip curl \
-            libqt4-dev libjpeg-dev libzmq3-dev gfortran libpng-dev libreadline-dev \
-            build-essential
-    else
-        # Unsupported
-        echo '==> platform not supported, aborting'
-        exit 1
-    fi
+elif [[ "$(uname)" == 'FreeBSD' ]]; then
+    pkg install ImageMagick cmake curl fftw3 git gnuplot libjpeg-turbo \
+        libzmq3 ncurses openblas openssl png py27-ipython \
+        py27-pip qt4-corelib qt4-gui readline unzip
+
+else
+    # Unsupported
+    echo '==> platform not supported, aborting'
+    exit 1
+fi
 
 ipython_exists=$(command -v ipython) || true
 if [[ $ipython_exists ]]; then {
