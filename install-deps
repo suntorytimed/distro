@@ -229,18 +229,18 @@ elif [[ "$(uname)" == 'Linux' ]]; then
         install_openblas || true
 
     elif [[ $distribution == 'opensuse' ]]; then
-        if sudo zypper refresh ; then
+        if zypper refresh ; then
             echo "Updated successfully."
         else
             echo "Some portion of the update failed"
         fi
-        sudo zypper install -y -t pattern devel_basis
+        zypper install -y -t pattern devel_basis
 	if [[ $opensuse_major_version == '42.2' ]]; then
-	    sudo zypper install -y gcc curl cmake readline-devel IPython git-core \
+	    zypper install -y gcc curl cmake readline-devel IPython git-core \
             	libqt4 libjpeg62-devel libpng16-compat-devel ImageMagick unzip \
             	gnuplot gcc-fortran libzmq5
 	else
-            sudo zypper install -y gcc curl cmake readline-devel IPython git-core \
+            zypper install -y gcc curl cmake readline-devel IPython git-core \
             	libqt4 libjpeg8-devel libpng15-compat-devel imagemagick unzip \
             	gnuplot gcc-fortran libzmq3
 	fi
